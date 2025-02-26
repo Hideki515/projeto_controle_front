@@ -2,6 +2,7 @@ $(document).ready(() => {
   // URL da API
   const URL_POST_EXPENSES = 'http://localhost:2222/expenses'
   const URL_GET_EXPENSES = 'http://localhost:2222/expenses/list'
+  const URL_DELETE_EXPENSES = 'http://localhost:2222/expense'
 
   inicializer();
 
@@ -19,6 +20,7 @@ $(document).ready(() => {
     resetFilters();
     // Função de mudar dropdown
     dropdownChange();
+    deleteExpense();
   }
 
   function dropdown() {
@@ -101,7 +103,7 @@ $(document).ready(() => {
                   <button class="ui inverted blue button mini">
                     <i class="edit icon"></i>
                   </button>
-                  <button class="ui inverted red button mini">
+                  <button class="ui inverted red button mini btn-delete-expense" id='btn-delete-expense' data-id="${expense.id}">
                     <i class="trash icon"></i>
                   </button>
                 </td>
@@ -118,6 +120,9 @@ $(document).ready(() => {
     }).fail((jqXHR, textStatus, errorThrown) => {
       console.error("Erro na requisição: ", textStatus, errorThrown);
     });
+
+    deleteExpense();
+
   }
 
   function dropdownChange() {
@@ -206,6 +211,56 @@ $(document).ready(() => {
       }
     });
   }
+
+  function deleteExpense() {
+    $(document).on('click', '.btn-delete-expense', function () { // Usa delegação de evento
+      let line = $(this).closest('tr'); // Obtém a linha do botão clicado
+      let id = $(this).data('id'); // Obtém o ID da despesa
+
+      console.log("ID da despesa:", id);
+
+      $.ajax({
+        type: 'DELETE',
+        url: URL_DELETE_EXPENSES + '/' + id,
+        success: (data, textStatus, jqXHR) => {
+          if (jqXHR.status === 200) {
+            line.remove(); // Remove a linha da tabela
+            Swal.fire({
+              title: "👍😁",
+              text: "Despesa deletada com sucesso!",
+              timer: 3000,
+              icon: "success",
+              showConfirmButton: false,
+            });
+          } else {
+            Swal.fire({
+              title: "Erro!",
+              text: "Despesa não deletada!",
+              timer: 3000,
+              icon: "error",
+              showConfirmButton: false,
+            });
+          }
+        },
+        error: (error) => {
+          console.error('Erro:', error);
+          let mensagemErro = "Ocorreu um erro ao deletar a despesa.";
+          if (error.responseJSON && error.responseJSON.message) {
+            mensagemErro = error.responseJSON.message;
+          } else if (error.responseText) {
+            mensagemErro = error.responseText;
+          }
+          Swal.fire({
+            icon: "error",
+            title: "Erro!",
+            text: mensagemErro,
+          });
+        }
+      });
+    });
+  }
+
+
   function dateValider(data) {
     // Verifica se a data é válida e não é futura
     const dataInserida = new Date(`${data}T00:00:00`); // Adiciona T00:00:00 para evitar problemas de fuso horário.
