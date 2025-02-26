@@ -1,6 +1,7 @@
 $(document).ready(() => {
 
   const URL_POST_EXPENSES = 'http://localhost:2222/expenses'
+  const URL_GET_EXPENSES = 'http://localhost:2222/expenses/list'
 
   inicializer();
 
