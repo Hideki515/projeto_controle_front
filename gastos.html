@@ -11,7 +11,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css"
     />
-    
+
     <!-- ICON -->
     <link rel="icon" href="./src/img/dollar.png" />
   </head>
@@ -39,10 +39,121 @@
     </div>
     <!-- FIM Cabeçalho -->
 
+    <!-- Adicionado o botão para adicionar gastos -->
+    <button class="ui inverted red button btn-adicionar" id="btn-add-expenses" >
+      <i class="plus icon"></i> Gasto
+    </button>
+
+    <!-- Modal adicionar gastos -->
+    <div class="ui modal expenses coupled modal">
+      <i class="close icon"></i>
+      <div class="header">Adicionar Gastos</div>
+      <div class="content">
+        <div class="ui form">
+          <div class="field">
+            <!-- Campo Data -->
+            <label>Data:</label>
+            <input
+              type="date"
+              name="data-gasto"
+              pattern="\d*"
+              id="date-expense"
+            />
+            <br />
+            <br />
+            <!-- Campo descrição -->
+            <label>Descrição:</label>
+            <input
+              type="text"
+              name="descricao-gasto"
+              pattern="\d*"
+              placeholder="Digite a descrição do gasto"
+              id="description-expense"
+            />
+            <br />
+            <br />
+            <!-- Campo valor -->
+            <label>Valor:</label>
+            <div class="ui labeled input">
+              <div class="ui label">R$</div>
+              <input
+                type="text"
+                placeholder="Digite o valor do gasto"
+                pattern="\d*"
+                id="value-expense"
+              />
+            </div>
+            <br />
+            <br />
+            <!-- Campo para selecionar a categoria do gasto-->
+            <div class="field"></div>
+            <label>Categoria:</label>
+            <select
+              class="ui selection"
+              name="categoria-gasto"
+              id="category-expense"
+            >
+              <!-- Placeholder -->
+              <option value="" selected hidden>
+                Selecione a categoria do gasto
+              </option>
+              <!-- Categoria 1 - Alimentação -->
+              <option value="alimentação">Alimentação</option>
+              <!-- Categoria 2 - Transporte -->
+              <option value="transporte">Transporte</option>
+              <!-- Categoria 3 - Saúde -->
+              <option value="saúde">Saúde</option>
+              <!-- Categoria 4 - Educação -->
+              <option value="educação">Educação</option>
+              <!-- Categoria 5 - Lazer -->
+              <option value="lazer">Lazer</option>
+              <!-- Categoria 6 - Outros -->
+              <option value="educação">Outros</option>
+            </select>
+            <!-- </div> -->
+              <!-- Campo para selecionar o local do dinheiro-->
+            <div class="field"></div>
+            <label>Conta:</label>
+            <select
+              class="ui selection"
+              name="conta-gasto"
+              id="account-expense"
+            >
+              <!-- Placeholder -->
+              <option
+                value="Selecione a conta do gasto"
+                selected
+                hidden
+              >
+                Selecione a conta do gasto
+              </option>
+              <option value="NuBank">NuBank</option>
+              <option value="PicPay">PicPay</option>
+              <option value="MercadoPago">Mercado Pago</option>
+              <option value="Inter">Inter</option>
+              <option value="Nomad">Nomad</option>
+              <option value="BBPoupança">BB - Poupança</option>
+              <option value="BBConta Corrente">BB - Conta Corrente</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui red deny button" id="btn-cancelar">Cancelar</div>
+        <div class="ui green right button" id="btn-save-expense">
+          Adicionar Gasto
+        </div>
+      </div>
+    </div>
+    <!-- Fim mpdal adicionar receitas -->
+
     <!-- JavaScript -->
-    <script src="js/jquery-3.7.1.min.js"></script>
-    <script src="js/jquery.mask.min.js"></script>
-    <script src="js/semantic.min.js"></script>
-    <script src="js/sweetalert2@11.js"></script>
+    <script src="./src/js/jquery-3.7.1.min.js"></script>
+    <script src="./src/js/jquery.mask.min.js"></script>
+    <script src="./src/js/semantic.min.js"></script>
+    <script src="./src/js/sweetalert2@11.js"></script>
+    <!-- Controller -->
+     <script src="./src/controller/add-expenses.js"></script>
   </body>
 </html>
