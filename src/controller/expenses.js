@@ -29,8 +29,10 @@ $(document).ready(() => {
   };
 
   function listExpenses() {
+    // Limpa o conteúdo atual da tabela
+    $('#list-expenses').empty();
+
     $.getJSON(URL_GET_EXPENSES, (response) => {
-      console.log("Dados recebidos:", response); // Depuração
 
       let listExpenses = '';
 
@@ -54,8 +56,8 @@ $(document).ready(() => {
                 </td>
               </tr>
           `;
-          $('#list-expenses').append(listExpenses);
         });
+        $('#list-expenses').append(listExpenses);
       } else {
         console.error("Erro: A resposta da API não contém um array válido.", response);
       }
@@ -70,8 +72,8 @@ $(document).ready(() => {
         descricao: $('#description-expense').val(),
         data: $('#date-expense').val(),
         valor: $("#value-expense").val(),
-        categoria: $("#category-expense").val().toLowrCase(),
-        conta: $("#account-expense").val().toLowrCase()
+        categoria: $("#category-expense").val().toLowerCase(),
+        conta: $("#account-expense").val().toLowerCase()
       };
 
       if (!data.descricao || !data.data || !data.valor || data.categoria === 'selecione a categoria do gasto' || data.conta === 'selecione a conta da receita') {
@@ -96,6 +98,7 @@ $(document).ready(() => {
           success: (data, textStatus, jqXHR) => {
             if (jqXHR.status === 201) {
               valuesReset();
+              listExpenses();
               $('.ui.modal').modal('hide');
               Swal.fire({
                 title: "👍😁",
@@ -117,7 +120,6 @@ $(document).ready(() => {
           error: (error) => {
             console.error('Erro:', error);
             let mensagemErro = "Ocorreu um erro ao adicionar a despesa.";
-            // biome-ignore lint/complexity/useOptionalChain: <explanation>
             if (error.responseJSON && error.responseJSON.message) {
               mensagemErro = error.responseJSON.message;
             } else if (error.responseText) {
