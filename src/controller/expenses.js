@@ -10,6 +10,8 @@ $(document).ready(() => {
     displayModal();
     // Função de mascarar valor
     maskValue();
+    // Função de listar despesas
+    listExpenses();
     // Função de adicionar despesas
     addExpenses();
   }
@@ -25,6 +27,41 @@ $(document).ready(() => {
   function maskValue() {
     $('#value-expense').mask('000.000.000,00', { reverse: true, placeholder: "000,00" });
   };
+
+  function listExpenses() {
+    $.getJSON(URL_GET_EXPENSES, (response) => {
+      console.log("Dados recebidos:", response); // Depuração
+
+      let listExpenses = '';
+
+      if (Array.isArray(response.expenses)) {
+        response.expenses.forEach((expense) => {
+          listExpenses += `
+              <tr>
+                <td>${expense.id}</td>
+                <td>${expense.descricao}</td>
+                <td>${expense.data}</td>
+                <td>R$ ${expense.valor}</td>
+                <td>${expense.categoria}</td>
+                <td>${expense.conta}</td>
+                <td>
+                  <button class="ui inverted blue button mini">
+                    <i class="edit icon"></i>
+                  </button>
+                  <button class="ui inverted red button mini">
+                    <i class="trash icon"></i>
+                  </button>
+                </td>
+              </tr>
+          `;
+          $('#list-expenses').append(listExpenses);
+        });
+      } else {
+        console.error("Erro: A resposta da API não contém um array válido.", response);
+      }
+    });
+  }
+
 
   function addExpenses() {
 
