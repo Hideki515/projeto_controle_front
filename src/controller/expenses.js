@@ -1,11 +1,12 @@
 $(document).ready(() => {
-
+  // URL da API
   const URL_POST_EXPENSES = 'http://localhost:2222/expenses'
   const URL_GET_EXPENSES = 'http://localhost:2222/expenses/list'
 
   inicializer();
 
   function inicializer() {
+    dropdown()
     // Função de exibir modal
     displayModal();
     // Função de mascarar valor
@@ -14,6 +15,14 @@ $(document).ready(() => {
     listExpenses();
     // Função de adicionar despesas
     addExpenses();
+    // Função de limpar filtros
+    resetFilters();
+    // Função de mudar dropdown
+    dropdownChange();
+  }
+
+  function dropdown() {
+    $('.ui.dropdown').dropdown();
   }
 
   function displayModal() {
@@ -32,13 +41,55 @@ $(document).ready(() => {
     // Limpa o conteúdo atual da tabela
     $('#list-expenses').empty();
 
+    // Captura os valores dos filtros
+    const accountFilter = $('#filter-account').val();
+    const monthFilter = $('#filter-month').val();
+    const categoryFilter = $('#filter-category').val();
+
+    // Cria o objeto de parâmetros para a requisição
+    let filterParams = {};
+
+    // Adiciona os filtros se selecionados
+    if (accountFilter !== "Selecione a conta do gasto") {
+      filterParams.conta = accountFilter;
+    }
+    if (monthFilter !== "Selecione o mês") {
+      filterParams.mes = monthFilter;
+    }
+    if (categoryFilter !== "Selecione a categoria do gasto") {
+      filterParams.categoria = categoryFilter;
+    }
+
+    console.log("Filtros aplicados:", filterParams); // Adiciona log para verificar os filtros
+
+    // Faz a requisição para buscar as despesas com os filtros aplicados
     $.getJSON(URL_GET_EXPENSES, (response) => {
-
       let listExpenses = '';
+      let filteredExpenses = response.expenses;
 
-      if (Array.isArray(response.expenses)) {
-        response.expenses.forEach((expense) => {
-          listExpenses += `
+      // Verifica se a resposta contém despesas
+      if (Array.isArray(filteredExpenses)) {
+
+        // Filtra as despesas com base nos filtros aplicados
+        if (accountFilter !== "Selecione a conta do gasto") {
+          filteredExpenses = filteredExpenses.filter(expense => expense.conta === accountFilter);
+        }
+        if (monthFilter !== "Selecione o mês") {
+          filteredExpenses = filteredExpenses.filter(expense => {
+            const expenseMonth = new Date(expense.data).getMonth() + 1; // Obtém o mês da data (mes começa em 0)
+            return expenseMonth === parseInt(monthFilter);
+          });
+        }
+        if (categoryFilter !== "Selecione a categoria do gasto") {
+          filteredExpenses = filteredExpenses.filter(expense => expense.categoria === categoryFilter);
+        }
+
+        // Verifica se após a filtragem existem despesas
+        if (filteredExpenses.length === 0) {
+          listExpenses = '<tr><td colspan="7">Nenhuma despesa encontrada para os filtros aplicados.</td></tr>';
+        } else {
+          filteredExpenses.forEach((expense) => {
+            listExpenses += `
               <tr>
                 <td>${expense.id}</td>
                 <td>${expense.descricao}</td>
@@ -55,15 +106,35 @@ $(document).ready(() => {
                   </button>
                 </td>
               </tr>
-          `;
-        });
+            `;
+          });
+        }
+
+        // Atualiza a tabela
         $('#list-expenses').append(listExpenses);
       } else {
         console.error("Erro: A resposta da API não contém um array válido.", response);
       }
+    }).fail((jqXHR, textStatus, errorThrown) => {
+      console.error("Erro na requisição: ", textStatus, errorThrown);
     });
   }
 
+  function dropdownChange() {
+    $('#filter-account, #filter-month, #filter-category').change(function () {
+      listExpenses();
+    });
+  }
+
+  function resetFilters() {
+    $('#btn-clear-filters').on('click', () => {
+      console.log('Limpar');
+
+      $('#filter-month').dropdown('set selected', 'Selecione o mês');
+      $('#filter-category').dropdown('set selected', 'Selecione a categoria do gasto');
+      $('#filter-account').dropdown('set selected', 'Selecione a conta do gasto');
+    });
+  }
 
   function addExpenses() {
 
@@ -153,8 +224,10 @@ $(document).ready(() => {
     $('#description-expense').val('');
     $('#date-expense').val('');
     $('#value-expense').val('');
-    $('#category-expense').val('Selecione a categoria do gasto');
-    $('#account-expense').val('Selecione a conta da receita');
+    $('#category-expense').dropdown('set selected', 'Selecione a categoria do gasto');
+    $('#account-expense').dropdown('set selected', 'Selecione a conta da receita');
+
+
   }
 
 });
