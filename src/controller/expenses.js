@@ -148,20 +148,16 @@ $(document).ready(() => {
 
   function addExpenses() {
     $('#btn-save-expense').on('click', () => {
-      let value = $("#value-expense").val();
-
-      // Converte para o formato correto
-      value = value.replace(/\./g, '').replace(',', '.'); // "1234.56"
 
       const data = {
         descricao: $('#description-expense').val(),
         data: $('#date-expense').val(),
-        valor: parseFloat(value), // Converte para número real
+        valor: $('#value-expense').val(),
         categoria: $("#category-expense").val().toLowerCase(),
         conta: $("#account-expense").val().toLowerCase()
       };
 
-      if (!data.descricao || !data.data || isNaN(data.valor) || data.categoria === 'selecione a categoria do gasto' || data.conta === 'selecione a conta da receita') {
+      if (!data.descricao || !data.data || !data.valor || data.categoria === 'selecione a categoria do gasto' || data.conta === 'selecione a conta da receita') {
         Swal.fire({
           icon: "error",
           title: "Oops...",
@@ -244,6 +240,12 @@ $(document).ready(() => {
 
       // Atualiza a despesa
       $('#btn-save-up-expense').on('click', () => {
+        let line = $(this).closest('tr'); // Obtém a linha do botão clicado
+        let id = $(this).data('id'); // Obtém o ID da despesa
+
+        console.log("ID da despesa:", id);
+
+        let valor = $('#value-expense-up').val();
 
         $.ajax({
           type: 'PATCH',
@@ -251,7 +253,7 @@ $(document).ready(() => {
           data: JSON.stringify({
             descricao: $('#description-expense-up').val(),
             data: $('#date-expense-up').val(),
-            valor: parseFloat($('#value-expense-up').val().replace(/\./g, '').replace(',', '.')),
+            valor: $('#value-expense-up').val(),
             categoria: $("#category-expense-up").val().toLowerCase(),
             conta: $("#account-expense-up").val().toLowerCase()
           }),
@@ -278,10 +280,8 @@ $(document).ready(() => {
               });
             }
           },
-        })
-
+        });
       });
-
     });
   }
 
