@@ -96,7 +96,6 @@ $(document).ready(() => {
           filteredExpenses.forEach((expense) => {
             listExpenses += `
             <tr>
-              <td data-id="${expense.id}">${expense.id}</td>
               <td data-descricao="${expense.descricao}">${expense.descricao}</td>
               <td data-data="${expense.data}">${expense.data}</td>
               <td data-valor="${expense.valor}">R$ ${expense.valor}</td>
