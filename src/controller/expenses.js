@@ -1,8 +1,8 @@
 $(document).ready(() => {
   // URL da API
-  const URL_POST_EXPENSES = 'http://localhost:2222/expenses'
-  const URL_GET_EXPENSES = 'http://localhost:2222/expenses/list'
-  const URL_DELETE_EXPENSES = 'http://localhost:2222/expense'
+  const URL_POST_EXPENSES = 'https://projeto-controle-api.onrender.com/expenses'
+  const URL_GET_EXPENSES = 'https://projeto-controle-api.onrender.com/expenses/list'
+  const URL_DELETE_EXPENSES = 'https://projeto-controle-api.onrender.com/expense'
 
   inicializer();
 
@@ -20,6 +20,7 @@ $(document).ready(() => {
     resetFilters();
     // Função de mudar dropdown
     dropdownChange();
+    // Função de deletar despesas
     deleteExpense();
   }
 
@@ -37,7 +38,7 @@ $(document).ready(() => {
 
   function maskValue() {
     $('#value-expense').mask('000.000.000,00', { reverse: true, placeholder: "000,00" });
-  };
+  }
 
   function listExpenses() {
     // Limpa o conteúdo atual da tabela
@@ -142,21 +143,25 @@ $(document).ready(() => {
   }
 
   function addExpenses() {
-
     $('#btn-save-expense').on('click', () => {
+      let value = $("#value-expense").val();
+
+      // Converte para o formato correto
+      value = value.replace(/\./g, '').replace(',', '.'); // "1234.56"
+
       const data = {
         descricao: $('#description-expense').val(),
         data: $('#date-expense').val(),
-        valor: $("#value-expense").val(),
+        valor: parseFloat(value), // Converte para número real
         categoria: $("#category-expense").val().toLowerCase(),
         conta: $("#account-expense").val().toLowerCase()
       };
 
-      if (!data.descricao || !data.data || !data.valor || data.categoria === 'selecione a categoria do gasto' || data.conta === 'selecione a conta da receita') {
+      if (!data.descricao || !data.data || isNaN(data.valor) || data.categoria === 'selecione a categoria do gasto' || data.conta === 'selecione a conta da receita') {
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Preencha todos os campos",
+          text: "Preencha todos os campos corretamente.",
         });
       } else if (!dateValider(data.data)) {
         Swal.fire({
@@ -178,17 +183,17 @@ $(document).ready(() => {
               $('.ui.modal').modal('hide');
               Swal.fire({
                 title: "👍😁",
-                text: "Despesa adicionada com sucesso!",
+                text: "Despesa Adicionada com sucesso!",
                 timer: 3000,
                 icon: "success",
                 showConfirmButton: false,
               });
             } else {
               Swal.fire({
-                title: "Erro!",
-                text: "Despesa não cadastrada!",
-                timer: 3000,
                 icon: "error",
+                title: "Erro!",
+                text: "Despesa não adicionada!",
+                timer: 3000,
                 showConfirmButton: false,
               });
             }
@@ -213,7 +218,7 @@ $(document).ready(() => {
   }
 
   function deleteExpense() {
-    $(document).on('click', '.btn-delete-expense', function () { // Usa delegação de evento
+    $(document).off('click', '.btn-delete-expense').on('click', '.btn-delete-expense', function () {
       let line = $(this).closest('tr'); // Obtém a linha do botão clicado
       let id = $(this).data('id'); // Obtém o ID da despesa
 
@@ -259,6 +264,7 @@ $(document).ready(() => {
       });
     });
   }
+
 
 
   function dateValider(data) {
