@@ -3,6 +3,7 @@ $(document).ready(() => {
   const URL_POST_EXPENSES = 'https://projeto-controle-api.onrender.com/expenses'
   const URL_GET_EXPENSES = 'https://projeto-controle-api.onrender.com/expenses/list'
   const URL_DELETE_EXPENSES = 'https://projeto-controle-api.onrender.com/expense'
+  const URL_EDIT_EXPENSES = 'https://projeto-controle-api.onrender.com/expenses'
 
   inicializer();
 
@@ -38,6 +39,7 @@ $(document).ready(() => {
 
   function maskValue() {
     $('#value-expense').mask('000.000.000,00', { reverse: true, placeholder: "000,00" });
+    $('#value-expense-up').mask('000.000.000,00', { reverse: true, placeholder: "000,00" });
   }
 
   function listExpenses() {
@@ -93,23 +95,23 @@ $(document).ready(() => {
         } else {
           filteredExpenses.forEach((expense) => {
             listExpenses += `
-              <tr>
-                <td>${expense.id}</td>
-                <td>${expense.descricao}</td>
-                <td>${expense.data}</td>
-                <td>R$ ${expense.valor}</td>
-                <td>${expense.categoria}</td>
-                <td>${expense.conta}</td>
-                <td>
-                  <button class="ui inverted blue button mini">
-                    <i class="edit icon"></i>
-                  </button>
-                  <button class="ui inverted red button mini btn-delete-expense" id='btn-delete-expense' data-id="${expense.id}">
-                    <i class="trash icon"></i>
-                  </button>
-                </td>
-              </tr>
-            `;
+            <tr>
+              <td data-id="${expense.id}">${expense.id}</td>
+              <td data-descricao="${expense.descricao}">${expense.descricao}</td>
+              <td data-data="${expense.data}">${expense.data}</td>
+              <td data-valor="${expense.valor}">R$ ${expense.valor}</td>
+              <td data-categoria="${expense.categoria}">${expense.categoria}</td>
+              <td data-conta="${expense.conta}">${expense.conta}</td>
+              <td>
+                <button class="ui inverted blue button mini btn-edit-expense" data-id="${expense.id}">
+                  <i class="edit icon"></i>
+                </button>
+                <button class="ui inverted red button mini btn-delete-expense" data-id="${expense.id}">
+                  <i class="trash icon"></i>
+                </button>
+              </td>
+            </tr>
+          `;
           });
         }
 
@@ -123,6 +125,8 @@ $(document).ready(() => {
     });
 
     deleteExpense();
+
+    editExpense();
 
   }
 
@@ -217,6 +221,70 @@ $(document).ready(() => {
     });
   }
 
+  function editExpense() {
+    $(document).off('click', '.btn-edit-expense').on('click', '.btn-edit-expense', function () {
+      let line = $(this).closest('tr'); // Obtém a linha do botão clicado
+      let id = $(this).data('id'); // Obtém o ID da despesa
+      // Retrieve data using data attributes
+      let descricao = line.find('td[data-descricao]').data('descricao');
+      let data = line.find('td[data-data]').data('data');
+      let valor = line.find('td[data-valor]').data('valor');
+      let categoria = line.find('td[data-categoria]').data('categoria');
+      let conta = line.find('td[data-conta]').data('conta');
+
+      // Preenche os campos do modal
+      $('#date-expense-up').val(data);
+      $('#description-expense-up').val(descricao);
+      $('#value-expense-up').val(valor);
+      $('#category-expense-up').dropdown('set selected', categoria);
+      $('#account-expense-up').dropdown('set selected', conta);
+
+      // Exibe o modal
+      $('.expenses-update').modal('show');
+
+      // Atualiza a despesa
+      $('#btn-save-up-expense').on('click', () => {
+
+        $.ajax({
+          type: 'PATCH',
+          url: URL_EDIT_EXPENSES + '/' + id,
+          data: JSON.stringify({
+            descricao: $('#description-expense-up').val(),
+            data: $('#date-expense-up').val(),
+            valor: parseFloat($('#value-expense-up').val().replace(/\./g, '').replace(',', '.')),
+            categoria: $("#category-expense-up").val().toLowerCase(),
+            conta: $("#account-expense-up").val().toLowerCase()
+          }),
+          contentType: 'application/json',
+          dataType: 'json',
+          success: (data, textStatus, jqXHR) => {
+            if (jqXHR.status === 200) {
+              listExpenses();
+              $('.expenses-update').modal('hide');
+              Swal.fire({
+                title: "👍😁",
+                text: "Despesa atualizada com sucesso!",
+                timer: 3000,
+                icon: "success",
+                showConfirmButton: false,
+              });
+            } else {
+              Swal.fire({
+                title: "Erro!",
+                text: "Despesa não atualizada!",
+                timer: 3000,
+                icon: "error",
+                showConfirmButton: false,
+              });
+            }
+          },
+        })
+
+      });
+
+    });
+  }
+
   function deleteExpense() {
     $(document).off('click', '.btn-delete-expense').on('click', '.btn-delete-expense', function () {
       let line = $(this).closest('tr'); // Obtém a linha do botão clicado
@@ -264,8 +332,6 @@ $(document).ready(() => {
       });
     });
   }
-
-
 
   function dateValider(data) {
     // Verifica se a data é válida e não é futura

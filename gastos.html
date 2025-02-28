@@ -139,6 +139,93 @@
     </div>
     <!-- Fim modal adicionar receitas -->
 
+    <!-- Modal Editar gastos -->
+    <div class="ui modal expenses-update coupled modal">
+      <i class="close icon"></i>
+      <div class="header"><i class="edit outline icon"></i> Editar Gastos</div>
+      <div class="content">
+        <div class="ui form">
+          <div class="field">
+            <!-- Campo Data -->
+            <label>Data:</label>
+            <input
+              type="date"
+              name="data-gasto"
+              pattern="\d*"
+              id="date-expense-up" />
+            <br />
+            <br />
+            <!-- Campo descrição -->
+            <label>Descrição:</label>
+            <input
+              type="text"
+              name="descricao-gasto"
+              pattern="\d*"
+              placeholder="Digite a descrição do gasto"
+              id="description-expense-up" />
+            <br />
+            <br />
+            <!-- Campo valor -->
+            <label>Valor:</label>
+            <div class="ui labeled input">
+              <div class="ui label">R$</div>
+              <input
+                type="text"
+                placeholder="Digite o valor do gasto"
+                pattern="\d*"
+                id="value-expense-up" />
+            </div>
+            <br />
+            <br />
+            <!-- Campo para selecionar a categoria do gasto-->
+            <div class="field"></div>
+            <label>Categoria:</label>
+            <select
+              class="ui selection"
+              name="categoria-gasto"
+              id="category-expense-up">
+              <option value selected hidden>
+                Selecione a categoria do gasto
+              </option>
+              <option value="alimentação">Alimentação</option>
+              <option value="transporte">Transporte</option>
+              <option value="saúde">Saúde</option>
+              <option value="educação">Educação</option>
+              <option value="lazer">Lazer</option>
+              <option value="educação">Outros</option>
+            </select>
+
+            <div class="field"></div>
+            <label>Conta:</label>
+            <select
+              class="ui selection"
+              name="conta-gasto"
+              id="account-expense-up">
+              <option value selected hidden>
+                Selecione a conta do gasto
+              </option>
+              <option value="nubank">NuBank</option>
+              <option value="picpay">PicPay</option>
+              <option value="mercadopago">Mercado Pago</option>
+              <option value="inter">Inter</option>
+              <option value="nomad">Nomad</option>
+              <option value="bbpoupança">BB - Poupança</option>
+              <option value="bbconta corrente">BB - Conta Corrente</option>
+              <option value="outros">Outros</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <div class="ui red deny button" id="btn-cancelar-up">Cancelar</div>
+        <div class="ui green right button" id="btn-save-up-expense">
+          <i class="save outline icon"></i> 
+          Salvar Edição
+        </div>
+      </div>
+    </div>
+    <!-- Fim modal editar receitas -->
+
     <!-- Filtros de gastos -->
     <div class="ui container margin-top-10">
       <!-- Dropdown de filtro de Mês -->
