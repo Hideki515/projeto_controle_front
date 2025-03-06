@@ -39,6 +39,12 @@
     </div>
     <!-- FIM Cabeçalho -->
 
+    <!-- Título da Página -->
+    <div class="ui two column centered grid margin-top-30">
+      <h1>Controle de Gastos</h1>
+    </div>
+    <!-- FIM Título da Página -->
+
     <!-- Adicionado o botão para adicionar receita -->
     <button
       class="ui inverted green button btn-adicionar"
@@ -60,7 +66,7 @@
               type="date"
               name="data-receita"
               pattern="\d*"
-              id="data-receita"
+              id="date-revenue"
             />
             <br />
             <br />
@@ -71,7 +77,7 @@
               name="descricao-receita"
               pattern="\d*"
               placeholder="Digite a descrição da receita"
-              id="descricao-receita"
+              id="description-revenue"
             />
             <br />
             <br />
@@ -83,7 +89,7 @@
                 type="text"
                 placeholder="Digite o valor da receita"
                 pattern="\d*"
-                id="valor-receita"
+                id="value-revenue"
               />
             </div>
             <!-- Campo para selecionar o local do dinheiro-->
@@ -92,7 +98,7 @@
             <select
               class="ui selection"
               name="conta-receita"
-              id="conta-receita"
+              id="account-revenue"
             >
               <!-- Placeholder -->
               <option
@@ -117,7 +123,7 @@
       </div>
       <div class="actions">
         <div class="ui red deny button" id="btn-cancelar">Cancelar</div>
-        <div class="ui green right button" id="btn-add-receita">
+        <div class="ui green right button" id="btn-save-revenues">
           Adicionar Receita
         </div>
       </div>
@@ -130,6 +136,6 @@
     <script src="./src/js/semantic.min.js"></script>
     <script src="./src/js/sweetalert2@11.js"></script>
     <!-- Controllers -->
-    <script src="./src/controller/add-revenues.js"></script>
+    <script src="./src/controller/revenues.js"></script>
   </body>
 </html>
