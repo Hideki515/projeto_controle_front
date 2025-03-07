@@ -41,7 +41,7 @@
 
     <!-- Título da Página -->
     <div class="ui two column centered grid margin-top-30">
-      <h1>Controle de Gastos</h1>
+      <h1>Controle de Receita</h1>
     </div>
     <!-- FIM Título da Página -->
 
@@ -129,6 +129,85 @@
       </div>
     </div>
     <!-- Fim modal adicionar revenues -->
+
+    <!-- Filtros de receitas -->
+    <div class="ui container margin-top-10">
+      <!-- Dropdown de filtro de Mês -->
+      <div class="ui five column grid">
+        <div class="column">
+          <div class="field">
+            <select class="ui selection dropdown" id="filter-month">
+              <option value="Selecione o mês" selected hidden>
+                Selecione o mês
+              </option>
+              <option value="01">Janeiro</option>
+              <option value="02">Fevereiro</option>
+              <option value="03">Março</option>
+              <option value="04">Abril</option>
+              <option value="05">Maio</option>
+              <option value="06">Junho</option>
+              <option value="07">Julho</option>
+              <option value="08">Agosto</option>
+              <option value="09">Setembro</option>
+              <option value="10">Outubro</option>
+              <option value="11">Novembro</option>
+              <option value="12">Dezembro</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="field">
+            <select class="ui selection dropdown" id="filter-account">
+              <option value="Selecione a conta" selected hidden>
+                Selecione a conta
+              </option>
+              <option value="NuBank">NuBank</option>
+              <option value="PicPay">PicPay</option>
+              <option value="Mercado Pago">Mercado Pago</option>
+              <option value="Inter">Inter</option>
+              <option value="Nomad">Nomad</option>
+              <option value="BB - Poupança">BB - Poupança</option>
+              <option value="BB - Conta Corrente">BB - Conta Corrente</option>
+              <option value="Outros">Outros</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Alinhar o botão ao lado dos dropdowns -->
+        <div class="ui one column grid">
+          <div class="column">
+            <!-- Colocando o botão dentro do mesmo grid -->
+            <button class="mini ui negative button" id="btn-clear-filters">
+              <i class="undo alternate icon"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- FIM filtros de Receitas -->
+
+      <!-- Lista de Receveitas -->
+      <!-- Tabela -->
+      <div class="row margin-top-10">
+        <div class="column">
+          <table class="ui celled table">
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Conta</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="list-revenues">
+              <!-- Os dados serão inseridos aqui via JavaScript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- Fim Lista de receitas -->
 
     <!-- JavaScript -->
     <script src="./src/js/jquery-3.7.1.min.js"></script>
